@@ -1,0 +1,42 @@
+CREATE A NEW PROJECT
+composer create-project --prefer-dist laravel/laravel middleware
+composer create-project --prefer-dist laravel/laravel projectName "5.6.*"
+
+OPEN LOCAL SERVER
+php artisan serve
+http://localhost:8000
+
+
+composer create-project --prefer-dist laravel/laravel projectName "5.6.*"
+npm install (for getting all dependancies)
+npm install admin-lte@v3.0.0-alpha.2 --save (for installing Ate admin panel)
+
+php artisan make:auth (to create auth)
+php artisan migrate (to create tables into the database after .env file configaration, and before migrating check the AppServiceProvider.php and add Schema::defaultStringLength('191') and use the "use Illuminate\Support\Facades\Schema;" )
+php artisan migrate: fresh (remigrate)
+
+//LTE Admin panel install
+npm install admin -lte@v3.0.0-alpha.2 --save
+
+//Fontawesome install 
+npm install @fortawesome/forntawesome-free
+
+//Vue Router install to laravel
+npm install vue-router
+npm install vue-template-compiler@2.6.6
+
+npm run watch (for create environment for development)
+
+
+CREATE CONTROLLER WITH CRUD FUNCTIONS
+php artisan make:controller ProductController -r
+
+ROUTE CHECK
+php artisan route:list
+
+CREATE MODEL
+php artisan make:model Product_model
+
+CREATE TABLE
+php artisan make:migration create_products_table
+
