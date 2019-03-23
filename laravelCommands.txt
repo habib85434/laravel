@@ -1,3 +1,5 @@
+https://www.youtube.com/watch?v=KskOZqvIZow&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=10
+
 CREATE A NEW PROJECT
 composer create-project --prefer-dist laravel/laravel middleware
 composer create-project --prefer-dist laravel/laravel projectName "5.6.*"
@@ -15,13 +17,17 @@ php artisan make:auth (to create auth)
 php artisan migrate (to create tables into the database after .env file configaration, and before migrating check the AppServiceProvider.php and add Schema::defaultStringLength('191') and use the "use Illuminate\Support\Facades\Schema;" )
 php artisan migrate: fresh (remigrate)
 
+//ROUTE CHECK
+php artisan route:list
+
 //LTE Admin panel install
 npm install admin -lte@v3.0.0-alpha.2 --save
 
 //Fontawesome install 
 npm install @fortawesome/forntawesome-free
+npm install --save-dev @fortawesome/fontawesome-free
 
-//Vue Router install to laravel
+//Vue Router install to laravel (https://router.vuejs.org/guide/#javascript)
 npm install vue-router
 npm install vue-template-compiler@2.6.6
 
@@ -39,4 +45,8 @@ php artisan make:model Product_model
 
 CREATE TABLE
 php artisan make:migration create_products_table
+
+*************************************
+FOR REST API 
+https://www.youtube.com/watch?v=lvlnf9HW_Jw&index=1&list=PLe30vg_FG4OT274vxiC_cXwQm2zqjf3Rh    //2days to finish it
 
