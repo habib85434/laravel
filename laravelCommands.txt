@@ -46,6 +46,11 @@ php artisan make:model Product_model
 CREATE TABLE
 php artisan make:migration create_products_table
 
+VALIDATION PACKAGE
+vform (https://www.youtube.com/watch?v=ezUVsuGNUnU&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=11)
+npm i axios vform (https://github.com/cretueusebiu/vform)
+
+
 *************************************
 FOR REST API 
 https://www.youtube.com/watch?v=lvlnf9HW_Jw&index=1&list=PLe30vg_FG4OT274vxiC_cXwQm2zqjf3Rh    //2days to finish it

@@ -7,6 +7,14 @@ import Dashboard from './components/Dashboard.vue';
 import Profile from './components/Profile.vue';
 import Example from './components/ExampleComponent.vue';
 import Users from './components/Users.vue';
+
+// vform
+import { Form, HasError, AlertError } from 'vform';
+window.Form = Form;
+Vue.component(HasError.name, HasError)
+Vue.component(AlertError.name, AlertError)
+// vform end
+
 Vue.use(VueRouter);
 
 let routes = [
