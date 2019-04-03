@@ -21,5 +21,5 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('products', 'ProductController');
 
-
+// for refreshing page from vue then it will refresh laravel url as well
 Route::get('{path}',"HomeController@index")->where( 'path', '([A-z\d-\/_.]+)?' );

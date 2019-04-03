@@ -1,4 +1,4 @@
-https://www.youtube.com/watch?v=KskOZqvIZow&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=10
+https://www.youtube.com/watch?v=b6ak-VXIGqY&index=12&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE
 
 CREATE A NEW PROJECT
 composer create-project --prefer-dist laravel/laravel middleware
@@ -49,6 +49,9 @@ php artisan make:migration create_products_table
 VALIDATION PACKAGE
 vform (https://www.youtube.com/watch?v=ezUVsuGNUnU&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=11)
 npm i axios vform (https://github.com/cretueusebiu/vform)
+
+API CONTROLLER CREATE
+php artisan make:controller API/ControllerName --api
 
 
 *************************************
