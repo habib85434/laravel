@@ -53,6 +53,16 @@ npm i axios vform (https://github.com/cretueusebiu/vform)
 API CONTROLLER CREATE
 php artisan make:controller API/ControllerName --api
 
+MOMENT JS FOR DATE FILTERING
+npm install moment --save 
+
+VUE PROGRESS BAR
+npm install vue-progressbar --save (https://github.com/hilongjw/vue-progressbar)
+
+SWEET ALERT2
+npm install sweetalert2 --save (https://sweetalert2.github.io/#download)
+
+
 
 *************************************
 FOR REST API 

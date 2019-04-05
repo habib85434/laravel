@@ -7,7 +7,7 @@
                         <h3 class="card-title">Users</h3>
 
                         <div class="card-tools">
-                            <button class="btn btn-success" data-toggle="modal" data-target="#addNew"><i class="fa fa-user-plus fa-fw"></i></button>
+                            <button class="btn btn-success" @click="newModel"><i class="fa fa-user-plus fa-fw"></i></button>
                         </div>
                     </div>
                     <!-- /.card-header -->
@@ -19,16 +19,18 @@
                                     <th>Name</th>
                                     <th>Email</th>
                                     <th>Type</th>
+                                    <th>Registered at</th>
                                     <th>Modify</th>
                                 </tr>
-                                <tr>
-                                    <td>183</td>
-                                    <td>John Doe</td>
-                                    <td>11-7-2014</td>
-                                    <td><span class="tag tag-success">Approved</span></td>
+                                <tr v-for="user in users" :key="user.id">
+                                    <td>{{user.id}}</td>
+                                    <td>{{user.name}}</td>
+                                    <td>{{user.email}}</td>
+                                    <td>{{user.type | upText}}</td>
+                                    <td>{{user.created_at | formattedDate}}</td>
                                     <td>
-                                        <a href="#"> <i class="fa fa-edit blue"></i></a> |
-                                        <a href="#"> <i class="fa fa-trash red"></i></a>
+                                        <a href="#" @click="editModel(user)"> <i class="fa fa-edit blue"></i></a> |
+                                        <a href="#" @click="deleteUser(user.id)"> <i class="fa fa-trash red"></i></a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -45,12 +47,13 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add New User</h5>
+                        <h5 class="modal-title" v-show="!editMode" id="exampleModalLabel">Add New User</h5>
+                        <h5 class="modal-title" v-show="editMode" id="exampleModalLabel">Update User</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form @submit.prevent="createUser">
+                    <form @submit.prevent="editMode ? updateUser() :createUser()">
                         <div class="modal-body">
                             <div class="form-group">
                                 <input v-model="form.name" type="text" name="name"
@@ -95,7 +98,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Create</button>
+                            <button v-show="editMode" type="submit" class="btn btn-success">Update</button>
+                            <button v-show="!editMode" type="submit" class="btn btn-primary">Create</button>
                         </div>
                     </form>
                 </div>
@@ -110,8 +114,11 @@
         
         data () {
             return {
+                editMode              : false,
+                users                   : {},
                 // Create a new form instance
                 form: new Form({
+                    id                  : '',
                     name                : '',
                     password            : '',
                     email               : '',
@@ -129,9 +136,107 @@
 
         },
         methods: {
+
+            updateUser(){
+                this.$Progress.start();
+                this.form.put('api/user/'+this.form.id)
+                .then(()=>{
+                     $('#addNew').modal('hide');
+                    swal.fire(
+                            'Updated!',
+                            'User information has been updated', 
+                            'success'
+                            );
+                    this.$Progress.finish();
+                    Fire.$emit('afterUserAction');
+                })
+                .catch(()=>{
+                    this.$Progress.fail();
+                });
+            },
+
+            editModel(user){
+                this.editMode           = true;
+                this.form.reset();
+                $('#addNew').modal('show');
+                this.form.fill(user);  //set the data of the clicked user
+            },
+
+            
+            newModel(){
+                this.editMode           = false;
+                this.form.reset();
+                $('#addNew').modal('show');
+            },
+
+
+
+            deleteUser(id){
+                //Sweet alert Start
+                swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.value) {
+                        //ajax request to delete Start
+                        this.form.delete('api/user/'+id) //php artisan route:list then we can find the link as method DELETE
+                        .then(()=>{
+                            swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.', 
+                            'success'
+                            );
+                            Fire.$emit('afterUserAction');
+                        })
+                        .catch(()=>{
+                            swal('Failed!', 'There was something wrong.', 'warning');
+                        }); 
+                        //ajax request to delete End
+                    }
+                    
+                })
+                //Sweet alert End
+            },
+            loadUsers(){
+                this.$Progress.start();
+                axios.get('api/user').then(({data}) => (this.users = data.data));
+                this.$Progress.finish();
+            },
             createUser(){
+                this.$Progress.start();
+
                 this.form.post('api/user')
+                .then(()=>{
+                    Fire.$emit('afterUserAction'); //custom event : after creating the user it will load
+
+                    $('#addNew').modal('hide');
+
+                    Toast.fire({
+                    type: 'success',
+                    title: 'User Created successfully'
+                    });
+
+                    this.$Progress.finish();
+                })
+                .catch(()=>{
+
+                })
+                ;
+
+                
             }
+        },
+        // created works like did mount in react
+        created(){
+            this.loadUsers();
+            //setInterval(()=>this.loadUsers(), 3000); //every after 3 second this api will be calling
+
+            Fire.$on('afterUserAction', ()=>{this.loadUsers()}); //calling the custom event and fired the event
         }
     }
 </script>
