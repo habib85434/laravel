@@ -5,6 +5,7 @@ window.Vue = require('vue');
 import VueRouter                        from 'vue-router';
 import Dashboard                        from './components/Dashboard.vue';
 import Profile                          from './components/Profile.vue';
+import Developer                        from './components/developer.vue';
 import Example                          from './components/ExampleComponent.vue';
 import Users                            from './components/Users.vue';
 import moment                           from 'moment';
@@ -25,6 +26,7 @@ Vue.use(VueRouter);
 let routes = [
     // { path: '/dashboard', component: require('./components/Dashboard.vue') },
     { path: '/dashboard', component: Dashboard },
+    { path: '/developer', component: Developer },
     { path: '/profile', component: Profile },
     { path: '/user', component: Users }
 ];
@@ -83,6 +85,23 @@ const Toast = Swal.mixin({
 let Fire = new Vue();
 window.Fire = Fire;
 //Custom Event Loading Globally End
+
+//Passport api authentification Start
+Vue.component(
+  'passport-clients',
+  require('./components/passport/Clients.vue').default
+);
+
+Vue.component(
+  'passport-authorized-clients',
+  require('./components/passport/AuthorizedClients.vue').default
+);
+
+Vue.component(
+  'passport-personal-access-tokens',
+  require('./components/passport/PersonalAccessTokens.vue').default
+);
+//Passport api authentification End
 
 
 Vue.component('example-component', Example.default); 

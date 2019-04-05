@@ -13,8 +13,8 @@ composer create-project --prefer-dist laravel/laravel projectName "5.6.*"
 npm install (for getting all dependancies)
 npm install admin-lte@v3.0.0-alpha.2 --save (for installing Ate admin panel)
 
-php artisan make:auth (to create auth)
-php artisan migrate (to create tables into the database after .env file configaration, and before migrating check the AppServiceProvider.php and add Schema::defaultStringLength('191') and use the "use Illuminate\Support\Facades\Schema;" )
+php artisan make:auth                                       (to create auth)
+php artisan migrate                                         (to create tables into the database after .env file configaration, and before migrating check the AppServiceProvider.php and add Schema::defaultStringLength('191') and use the "use Illuminate\Support\Facades\Schema;" )
 php artisan migrate: fresh (remigrate)
 
 //ROUTE CHECK
@@ -27,7 +27,7 @@ npm install admin -lte@v3.0.0-alpha.2 --save
 npm install @fortawesome/forntawesome-free
 npm install --save-dev @fortawesome/fontawesome-free
 
-//Vue Router install to laravel (https://router.vuejs.org/guide/#javascript)
+//Vue Router install to laravel                                 (https://router.vuejs.org/guide/#javascript)
 npm install vue-router
 npm install vue-template-compiler@2.6.6
 
@@ -47,8 +47,8 @@ CREATE TABLE
 php artisan make:migration create_products_table
 
 VALIDATION PACKAGE
-vform (https://www.youtube.com/watch?v=ezUVsuGNUnU&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=11)
-npm i axios vform (https://github.com/cretueusebiu/vform)
+vform                                                           (https://www.youtube.com/watch?v=ezUVsuGNUnU&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=11)
+npm i axios vform                                               (https://github.com/cretueusebiu/vform)
 
 API CONTROLLER CREATE
 php artisan make:controller API/ControllerName --api
@@ -57,10 +57,23 @@ MOMENT JS FOR DATE FILTERING
 npm install moment --save 
 
 VUE PROGRESS BAR
-npm install vue-progressbar --save (https://github.com/hilongjw/vue-progressbar)
+npm install vue-progressbar --save                                  (https://github.com/hilongjw/vue-progressbar)
 
 SWEET ALERT2
-npm install sweetalert2 --save (https://sweetalert2.github.io/#download)
+npm install sweetalert2 --save                                      (https://sweetalert2.github.io/#download)
+
+LARAVEL PASSPORT FOR API AUTHENTICATION 
+1.composer require laravel/passport                                 //use the php strom terminal not git bash (https://laravel.com/docs/5.7/passport)
+2.php artisan vendor:publish --tag=passport-migrations              //for create default migrate tables into the db
+3.php artisan migrate
+4.php artisan passport:install
+5. follow the instruction from the document to use and put in the user model and AuthServiceProvider and config/auth then Frontend quickstart
+//for this project the secret key is given below
+Client ID: 1
+Client secret: khYQ9wLv198RqIGuFNeTpAsx76fAA4xqY6tq6VKC
+Password grant client created successfully.
+Client ID: 2
+Client secret: C6IpLt8cMlEArrA59sHgLlWuw7M5PB7tXRNkI7v3
 
 
 
