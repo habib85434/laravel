@@ -114,6 +114,11 @@ Vue.component('not-found',NotFound);
 // Not Found component End
 
 
+//Laravel Vue Pagination Start
+Vue.component('pagination', require('laravel-vue-pagination'));
+//Laravel Vue Pagination End
+
+
 Vue.component('example-component', Example.default); 
 
 const app = new Vue({

@@ -83,6 +83,9 @@ PHP IMAGE CONVER AND DESIGN PACKAGE CALLED intervention
 1. composer require intervention/image                               //http://image.intervention.io/getting_started/installation
 2. php artisan vendor:publish --provider="Intervention\Image\ImageServiceProviderLaravel5"
 
+LARAVEL VUE PAGINATION
+1.npm install laravel-vue-pagination (https://github.com/gilbitron/laravel-vue-pagination)
+
 
 
 *************************************
