@@ -84,7 +84,13 @@ PHP IMAGE CONVER AND DESIGN PACKAGE CALLED intervention
 2. php artisan vendor:publish --provider="Intervention\Image\ImageServiceProviderLaravel5"
 
 LARAVEL VUE PAGINATION
-1.npm install laravel-vue-pagination (https://github.com/gilbitron/laravel-vue-pagination)
+1.npm install laravel-vue-pagination                                (https://github.com/gilbitron/laravel-vue-pagination)
+
+
+GENERATE LARAVEL MIGRATION FROM AN EXISTING DATABASE
+1.composer require --dev "xethron/migrations-generator"             //https://github.com/Xethron/migrations-generator
+2.connect the database from .env file
+3.php artisan migrate:generate
 
 
 
