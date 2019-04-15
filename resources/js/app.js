@@ -8,6 +8,8 @@ import Profile                          from './components/Profile.vue';
 import Developer                        from './components/developer.vue';
 import Example                          from './components/ExampleComponent.vue';
 import Users                            from './components/Users.vue';
+import NotFound                         from './components/NotFound.vue';
+import Gate                             from "./Gate";
 import moment                           from 'moment';
 import VueProgressBar                   from 'vue-progressbar';
 import Swal                             from 'sweetalert2';
@@ -18,6 +20,10 @@ window.Form = Form;
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
 // vform End
+
+//Gate for ACL Start
+Vue.prototype.$gate = new Gate(window.user);
+//Gate for ACL End
 
 
 //Router Start
@@ -102,6 +108,10 @@ Vue.component(
   require('./components/passport/PersonalAccessTokens.vue').default
 );
 //Passport api authentification End
+
+// Not Found component Start
+Vue.component('not-found',NotFound);
+// Not Found component End
 
 
 Vue.component('example-component', Example.default); 

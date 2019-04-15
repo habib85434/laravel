@@ -1,5 +1,8 @@
 https://www.youtube.com/watch?v=b6ak-VXIGqY&index=12&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE
 
+LARAVEL QUERIES
+https://laravel.com/docs/5.0/queries
+
 CREATE A NEW PROJECT
 composer create-project --prefer-dist laravel/laravel middleware
 composer create-project --prefer-dist laravel/laravel projectName "5.6.*"
@@ -44,14 +47,14 @@ CREATE MODEL
 php artisan make:model Product_model
 
 CREATE TABLE
-php artisan make:migration create_products_table
+php artisan make:migration create_task_table
 
 VALIDATION PACKAGE
 vform                                                           (https://www.youtube.com/watch?v=ezUVsuGNUnU&list=PLB4AdipoHpxaHDLIaMdtro1eXnQtl_UvE&index=11)
 npm i axios vform                                               (https://github.com/cretueusebiu/vform)
 
 API CONTROLLER CREATE
-php artisan make:controller API/ControllerName --api
+php artisan make:controller API/TaskController --api
 
 MOMENT JS FOR DATE FILTERING
 npm install moment --save 
@@ -74,6 +77,11 @@ Client secret: khYQ9wLv198RqIGuFNeTpAsx76fAA4xqY6tq6VKC
 Password grant client created successfully.
 Client ID: 2
 Client secret: C6IpLt8cMlEArrA59sHgLlWuw7M5PB7tXRNkI7v3
+
+
+PHP IMAGE CONVER AND DESIGN PACKAGE CALLED intervention
+1. composer require intervention/image                               //http://image.intervention.io/getting_started/installation
+2. php artisan vendor:publish --provider="Intervention\Image\ImageServiceProviderLaravel5"
 
 
 

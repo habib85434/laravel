@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div class="row mt-5">
+        <div class="row mt-5" v-if="$gate.isAdminOrAuthor()">
             <div class="col-mid-12">
                 <div class="card">
                     <div class="card-header">
@@ -42,6 +42,10 @@
             </div>
         </div>
 
+        <div v-if="!$gate.isAdminOrAuthor()">
+            <not-found></not-found>
+        </div>
+        
         <!-- Modal -->
         <div class="modal fade" id="addNew" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -203,9 +207,18 @@
                 //Sweet alert End
             },
             loadUsers(){
-                this.$Progress.start();
-                axios.get('api/user').then(({data}) => (this.users = data.data));
-                this.$Progress.finish();
+                if(this.$gate.isAdminOrAuthor()){
+                    this.$Progress.start();
+                    axios.get('api/user')
+                    .then(({data}) => {
+                        this.users = data.data;
+                        this.$Progress.finish();
+                    })
+                    .catch(()=>{
+                        this.$Progress.fail();
+                    })
+                } 
+                
             },
             createUser(){
                 this.$Progress.start();
@@ -224,7 +237,7 @@
                     this.$Progress.finish();
                 })
                 .catch(()=>{
-
+                    this.$Progress.fail();
                 })
                 ;
 

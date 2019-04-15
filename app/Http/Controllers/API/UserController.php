@@ -10,6 +10,17 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     /**
+     * Create a new controller instance
+     * @author Habibur Rahman (Sr. Software Engineer) <hrekns@yahoo.com>
+     *
+     */
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+
+
+    /**
      * Display a listing of the resource.
      * @author Habibur Rahman (Sr. Software Engineer) <hrekns@yahoo.com>
      *
@@ -17,7 +28,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::latest()->paginate(10);
+        //$this->authorize('isAdmin');
+
+        if (\Gate::allows('isAdmin') || \Gate::allows('isAuthor')) {
+            return User::latest()->paginate(10);
+        }
     }
 
     /**
@@ -99,5 +114,77 @@ class UserController extends Controller
 
         return ['message'=>'User deleted'];
 
+    }
+
+    /**
+     * Display the specified user's Profile
+     * @author Habibur Rahman (Sr. Software Engineer) <hrekns@yahoo.com>
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function profile()
+    {
+        //if it is normal auth user get then
+        //$theUser = Auth::User();
+
+        //if it is an API user then
+        return auth('api')->user();
+    }
+
+    /**
+     * Update profile
+     * @author Habibur Rahman, Sr. Software Engineer <hrekns@yahoo.com>
+     *
+     * @return \Illuminate\Http\Response
+    */
+    public function updateProfile(Request $request){
+        $user                   = auth('api')->user();
+        $currentPhoto           = $user->photo;
+
+        //validate
+        $this->validate($request,[
+            'name'              =>'required|string|max:191',
+            'email'             =>'required|string|email|max:191|unique:users,email,'.$user->id, //unique in the users table
+            'password'          =>'sometimes|required|string|min:6', //sometimes means either user can give the pass or it can be empty
+        ]);
+
+        if($request->photo != $currentPhoto){
+            $path               = 'imgs/profile/';
+            $name               = $this->base64ToUniqueName($request->photo,$path,$currentPhoto);
+
+            $request->merge(['photo'=> $name]);
+        }
+
+        if(!empty($request->password)){
+            $request->merge(['password' => Hash::make($request['password'])]);
+        }
+
+        $user->update($request->all());
+
+        return ['message' => 'Successfully Update User Information'];
+    }
+
+    /**
+     * BASE64 image file to convert a unique name with the image extension then UPLOAD TO THE GIVEN PATH and return the image name
+     * @author Habibur Rahman, Sr. Software Engineer, <hrekns@yahoo.com>
+     *
+     * @param $base64ImageFile
+     * @param $path
+     * @param $currentPhoto
+     * @return string;
+    */
+    public function base64ToUniqueName($base64ImageFile, $path,$currentPhoto){
+        $name =  time().'.' . explode('/', explode(':', substr($base64ImageFile, 0, strpos($base64ImageFile, ';')))[1])[1];
+
+        //UPLOAD Using Image intervention package
+        \Image::make($base64ImageFile)->save(public_path($path).$name);
+
+        //DELETE old image
+        $userPhoto = public_path($path).$currentPhoto;
+        if(file_exists($userPhoto)){
+            @unlink($userPhoto);
+        }
+
+        return $name;
     }
 }
