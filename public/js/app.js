@@ -80406,6 +80406,9 @@ var routes = [// { path: '/dashboard', component: require('./components/Dashboar
 }, {
   path: '/user',
   component: _components_Users_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
+}, {
+  path: '*',
+  component: _components_NotFound_vue__WEBPACK_IMPORTED_MODULE_6__["default"]
 }];
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
   mode: 'history',

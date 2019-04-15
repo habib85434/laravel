@@ -34,7 +34,8 @@ let routes = [
     { path: '/dashboard', component: Dashboard },
     { path: '/developer', component: Developer },
     { path: '/profile', component: Profile },
-    { path: '/user', component: Users }
+    { path: '/user', component: Users },
+    { path: '*', component: NotFound }
 ];
 
 const router = new VueRouter({
