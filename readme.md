@@ -1,69 +1,354 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+<p align="center">Image resizing </p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+# [Intervention Image with Laravel](http://image.intervention.io/getting_started/installation).
 
-## About Laravel
+### Installation
+$ php composer.phar require intervention/image
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+### Usage
+```sh
+    // create instance
+    $img = Image::make('public/foo.jpg');
+    
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+    // resize image to fixed size
+    $img->resize(300, 200);
+    
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications.
+    // resize only the width of the image
+    $img->resize(300, null);
+    
 
-## Learning Laravel
+    // resize only the height of the image
+    $img->resize(null, 200);
+    
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of any modern web application framework, making it a breeze to get started learning the framework.
+    // resize the image to a width of 300 and constrain aspect ratio (auto height)
+    $img->resize(300, null, function ($constraint) {
+        $constraint->aspectRatio();
+    });
+    
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 1100 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+    // resize the image to a height of 200 and constrain aspect ratio (auto width)
+    $img->resize(null, 200, function ($constraint) {
+        $constraint->aspectRatio();
+    });
+    
 
-## Laravel Sponsors
+    // prevent possible upsizing
+    $img->resize(null, 400, function ($constraint) {
+        $constraint->aspectRatio();
+        $constraint->upsize();
+    });
+    
 
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell):
+    // resize the image so that the largest side fits within the limit; the smaller
+    // side will be scaled to maintain the original aspect ratio
+    $img->resize(400, 400, function ($constraint) {
+        $constraint->aspectRatio();
+        $constraint->upsize();
+    });
+```
+[more..](http://image.intervention.io/api/resize).
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
+### Example
 
-## Contributing
+##### Route
+```sh
+    Route::get('customers', 'CustomerController@index')->name('customers.index');
+    Route::get('customers/create', 'CustomerController@create')->name('customers.create');
+    Route::post('customers', 'CustomerController@store')->name('customers.store');
+    Route::get('customers/{customer}', 'CustomerController@show')->name('customers.show');
+    Route::get('customers/{customer}/edit', 'CustomerController@edit')->name('customers.edit');
+    Route::patch('customers/{customer}', 'CustomerController@update')->name('customers.update');
+    Route::delete('customers/{customer}', 'CustomerController@destroy')->name('customers.destroy');
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+##### Controller
+```sh
+    namespace App\Http\Controllers;
 
-## Security Vulnerabilities
+    use Illuminate\Http\Request;
+    use App\Models\Customer;
+    use App\Models\Company;
+    //use App\Events\NewCustomerHasRegisteredEvent;
+    //use App\Mail\WelcomeNewUserMail;
+    use Illuminate\Support\Facades\Mail;
+    use Intervention\Image\Facades\Image;
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    class CustomerController extends Controller
+    {
+        public function index()
+        {
+            $customers = Customer::with('company')->paginate(25);
 
-## License
+            return view('customers.index', compact('customers'));
+        }
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+        public function create()
+        {
+            $companies = Company::all();
+            $customer = new Customer();
+
+            return view('customers.create', compact('companies', 'customer'));
+        }
+
+        public function store()
+        {
+    //        $this->authorize('create', Customer::class);
+
+            $customer = Customer::create($this->validateRequest());
+
+            $this->storeImage($customer);
+
+    //        event(new NewCustomerHasRegisteredEvent($customer));
+
+            return redirect('customers');
+        }
+
+        public function show(Customer $customer)
+        {
+            return view('customers.show', compact('customer'));
+        }
+
+        public function edit(Customer $customer)
+        {
+            $companies = Company::all();
+
+            return view('customers.edit', compact('customer', 'companies'));
+        }
+
+        public function update(Customer $customer)
+        {
+            $customer->update($this->validateRequest());
+
+            $this->storeImage($customer);
+
+            return redirect('customers/' . $customer->id);
+        }
+
+        public function destroy(Customer $customer)
+        {
+            $this->authorize('delete', $customer);
+
+            $customer->delete();
+
+            return redirect('customers');
+        }
+
+        private function validateRequest()
+        {
+            return request()->validate([
+                'name' => 'required|min:3',
+                'email' => 'required|email',
+                'active' => 'required',
+                'company_id' => 'required',
+                'image' => 'sometimes|file|image|max:5000',
+            ]);
+        }
+
+        private function storeImage($customer)
+        {
+            if (request()->has('image')) {
+                $customer->update([
+                    'image' => request()->image->store('uploads', 'public'),
+                ]);
+
+                // resize the image so that the largest side fits within the limit; the smaller
+                // side will be scaled to maintain the original aspect ratio
+
+                $image = Image::make(public_path('storage/' . $customer->image))->resize(400, 400, function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                });
+
+                $image->save();
+            }
+        }
+    }
+```
+
+##### Views
+```sh
+customers/index.blade.php
+@extends('layouts.app')
+@section('title', 'Customer List')
+
+@section('content')
+    <div class="row">
+        <div class="col-12">
+            <h1>Customer List</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <p><a href="{{ route('customers.create') }}">Add New Customer</a></p>
+        </div>
+    </div>
+
+    @foreach($customers as $customer)
+        <div class="row">
+            <div class="col-2">
+                {{ $customer->id }}
+            </div>
+            <div class="col-4">
+                <a href="{{ route('customers.show', ['customer' => $customer]) }}">
+                    {{ $customer->name }}
+                </a>
+
+                @cannot('view', $customer)
+                    {{ $customer->name }}
+                @endcannot
+            </div>
+            <div class="col-4">{{ $customer->company->name }}</div>
+            <div class="col-2">{{ $customer->active }}</div>
+        </div>
+    @endforeach
+
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center pt-4">
+            {{ $customers->links() }}
+        </div>
+    </div>
+@endsection
+
+
+
+
+customers/create.blade.php
+@extends('layouts.app')
+
+@section('title', 'Add New Customer')
+
+@section('content')
+    <div class="row">
+        <div class="col-12">
+            <h1>Add New Customer</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <form action="{{ route('customers.store') }}" method="POST" enctype="multipart/form-data">
+                @include('customers.form')
+
+                <button type="submit" class="btn btn-primary">Add Customer</button>
+            </form>
+        </div>
+    </div>
+@endsection
+
+
+
+
+customers/form.blade.php
+<div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" name="name" value="{{ old('name') ?? $customer->name }}" class="form-control">
+    <div>{{ $errors->first('name') }}</div>
+</div>
+
+<div class="form-group">
+    <label for="email">Email</label>
+    <input type="text" name="email" value="{{ old('email') ?? $customer->email }}" class="form-control">
+    <div>{{ $errors->first('email') }}</div>
+</div>
+
+<div class="form-group">
+    <label for="active">Status</label>
+    <select name="active" id="active" class="form-control">
+        <option value="" disabled>Select customer status</option>
+
+        @foreach($customer->activeOptions() as $activeOptionKey => $activeOptionValue)
+            <option value="{{ $activeOptionKey }}" {{ $customer->active == $activeOptionValue ? 'selected' : '' }}>{{ $activeOptionValue }}</option>
+        @endforeach
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="company_id">Company</label>
+    <select name="company_id" id="company_id" class="form-control">
+        @foreach ($companies as $company)
+            <option value="{{ $company->id }}" {{ $company->id == $customer->company_id ? 'selected' : '' }}>{{ $company->name }}</option>
+        @endforeach
+    </select>
+</div>
+
+<div class="form-group d-flex flex-column">
+    <label for="image">Profile Image</label>
+    <input type="file" name="image" class="py-2">
+    <div>{{ $errors->first('image') }}</div>
+</div>
+@csrf
+
+
+
+
+customers/edit.blade.php
+@extends('layouts.app')
+
+@section('title', 'Edit Details for ' . $customer->name)
+
+@section('content')
+    <div class="row">
+        <div class="col-12">
+            <h1>Edit Details for {{ $customer->name }}</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <form action="{{ route('customers.update', ['customer' => $customer]) }}" method="POST" enctype="multipart/form-data">
+                @method('PATCH')
+                @include('customers.form')
+
+                <button type="submit" class="btn btn-primary">Save Customer</button>
+            </form>
+        </div>
+    </div>
+@endsection
+
+
+
+
+
+customers/show.blade.php
+@extends('layouts.app')
+
+@section('title', 'Details for ' . $customer->name)
+
+@section('content')
+    <div class="row">
+        <div class="col-12">
+            <h1>Details for {{ $customer->name }}</h1>
+            <p><a href="{{ route('customers.edit', ['customer' => $customer]) }}">Edit</a></p>
+
+            <form action="{{ route('customers.destroy', ['customer' => $customer]) }}" method="POST">
+                @method('DELETE')
+                @csrf
+
+                <button class="btn btn-danger" type="submit">Delete</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <p><strong>Name</strong> {{ $customer->name }}</p>
+            <p><strong>Email</strong> {{ $customer->email }}</p>
+            <p><strong>Company</strong> {{ $customer->company->name }}</p>
+        </div>
+    </div>
+
+    @if($customer->image)
+        <div class="row">
+            <div class="col-12">
+                <img src="{{ asset('storage/' . $customer->image) }}" alt="" class="img-thumbnail">
+            </div>
+        </div>
+    @endif
+@endsection
+
+```
+
