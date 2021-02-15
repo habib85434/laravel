@@ -35,5 +35,4 @@
     <input type="file" name="image" class="py-2">
     <div>{{ $errors->first('image') }}</div>
 </div>
-
 @csrf

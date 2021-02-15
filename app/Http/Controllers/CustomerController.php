@@ -88,9 +88,6 @@ class CustomerController extends Controller
                 'image' => request()->image->store('uploads', 'public'),
             ]);
 
-//            $image = Image::make(public_path('storage/' . $customer->image))->resize(300, 300, null, 'top-left');
-//            $image = Image::make(public_path('storage/' . $customer->image))->fit(300, null, null, 'top-left');
-
             // resize the image so that the largest side fits within the limit; the smaller
             // side will be scaled to maintain the original aspect ratio
 
