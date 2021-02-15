@@ -51,7 +51,20 @@ $ php composer.phar require intervention/image
 ```
 [more..](http://image.intervention.io/api/resize).
 
-### Example methods
+### Example
+
+##### Route
+```sh
+    Route::get('customers', 'CustomerController@index')->name('customers.index');
+    Route::get('customers/create', 'CustomerController@create')->name('customers.create');
+    Route::post('customers', 'CustomerController@store')->name('customers.store');
+    Route::get('customers/{customer}', 'CustomerController@show')->name('customers.show');
+    Route::get('customers/{customer}/edit', 'CustomerController@edit')->name('customers.edit');
+    Route::patch('customers/{customer}', 'CustomerController@update')->name('customers.update');
+    Route::delete('customers/{customer}', 'CustomerController@destroy')->name('customers.destroy');
+```
+
+##### Controller
 ```sh
     namespace App\Http\Controllers;
 
@@ -153,5 +166,182 @@ $ php composer.phar require intervention/image
             }
         }
     }
+```
+
+##### Views
+```sh
+customers/index.blade.php
+@extends('layouts.app')
+@section('title', 'Customer List')
+
+@section('content')
+
+    <div class="row">
+        <div class="col-12">
+            <h1>Customer List</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <p><a href="{{ route('customers.create') }}">Add New Customer</a></p>
+        </div>
+    </div>
+
+    @foreach($customers as $customer)
+        <div class="row">
+            <div class="col-2">
+                {{ $customer->id }}
+            </div>
+            <div class="col-4">
+                <a href="{{ route('customers.show', ['customer' => $customer]) }}">
+                    {{ $customer->name }}
+                </a>
+
+                @cannot('view', $customer)
+                    {{ $customer->name }}
+                @endcannot
+            </div>
+            <div class="col-4">{{ $customer->company->name }}</div>
+            <div class="col-2">{{ $customer->active }}</div>
+        </div>
+    @endforeach
+
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center pt-4">
+            {{ $customers->links() }}
+        </div>
+    </div>
+@endsection
+
+
+customers/create.blade.php
+@extends('layouts.app')
+
+@section('title', 'Add New Customer')
+
+@section('content')
+    <div class="row">
+        <div class="col-12">
+            <h1>Add New Customer</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <form action="{{ route('customers.store') }}" method="POST" enctype="multipart/form-data">
+                @include('customers.form')
+
+                <button type="submit" class="btn btn-primary">Add Customer</button>
+            </form>
+        </div>
+    </div>
+@endsection
+
+
+customers/form.blade.php
+<div class="form-group">
+    <label for="name">Name</label>
+    <input type="text" name="name" value="{{ old('name') ?? $customer->name }}" class="form-control">
+    <div>{{ $errors->first('name') }}</div>
+</div>
+
+<div class="form-group">
+    <label for="email">Email</label>
+    <input type="text" name="email" value="{{ old('email') ?? $customer->email }}" class="form-control">
+    <div>{{ $errors->first('email') }}</div>
+</div>
+
+<div class="form-group">
+    <label for="active">Status</label>
+    <select name="active" id="active" class="form-control">
+        <option value="" disabled>Select customer status</option>
+
+        @foreach($customer->activeOptions() as $activeOptionKey => $activeOptionValue)
+            <option value="{{ $activeOptionKey }}" {{ $customer->active == $activeOptionValue ? 'selected' : '' }}>{{ $activeOptionValue }}</option>
+        @endforeach
+    </select>
+</div>
+
+<div class="form-group">
+    <label for="company_id">Company</label>
+    <select name="company_id" id="company_id" class="form-control">
+        @foreach ($companies as $company)
+            <option value="{{ $company->id }}" {{ $company->id == $customer->company_id ? 'selected' : '' }}>{{ $company->name }}</option>
+        @endforeach
+    </select>
+</div>
+
+<div class="form-group d-flex flex-column">
+    <label for="image">Profile Image</label>
+    <input type="file" name="image" class="py-2">
+    <div>{{ $errors->first('image') }}</div>
+</div>
+@csrf
+
+
+customers/edit.blade.php
+@extends('layouts.app')
+
+@section('title', 'Edit Details for ' . $customer->name)
+
+@section('content')
+    <div class="row">
+        <div class="col-12">
+            <h1>Edit Details for {{ $customer->name }}</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <form action="{{ route('customers.update', ['customer' => $customer]) }}" method="POST" enctype="multipart/form-data">
+                @method('PATCH')
+                @include('customers.form')
+
+                <button type="submit" class="btn btn-primary">Save Customer</button>
+            </form>
+        </div>
+    </div>
+@endsection
+
+
+
+customers/show.blade.php
+@extends('layouts.app')
+
+@section('title', 'Details for ' . $customer->name)
+
+@section('content')
+    <div class="row">
+        <div class="col-12">
+            <h1>Details for {{ $customer->name }}</h1>
+            <p><a href="{{ route('customers.edit', ['customer' => $customer]) }}">Edit</a></p>
+
+            <form action="{{ route('customers.destroy', ['customer' => $customer]) }}" method="POST">
+                @method('DELETE')
+                @csrf
+
+                <button class="btn btn-danger" type="submit">Delete</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <p><strong>Name</strong> {{ $customer->name }}</p>
+            <p><strong>Email</strong> {{ $customer->email }}</p>
+            <p><strong>Company</strong> {{ $customer->company->name }}</p>
+        </div>
+    </div>
+
+    @if($customer->image)
+        <div class="row">
+            <div class="col-12">
+                <img src="{{ asset('storage/' . $customer->image) }}" alt="" class="img-thumbnail">
+            </div>
+        </div>
+    @endif
+@endsection
+
 ```
 
