@@ -175,7 +175,6 @@ customers/index.blade.php
 @section('title', 'Customer List')
 
 @section('content')
-
     <div class="row">
         <div class="col-12">
             <h1>Customer List</h1>
@@ -215,6 +214,8 @@ customers/index.blade.php
 @endsection
 
 
+
+
 customers/create.blade.php
 @extends('layouts.app')
 
@@ -237,6 +238,8 @@ customers/create.blade.php
         </div>
     </div>
 @endsection
+
+
 
 
 customers/form.blade.php
@@ -280,6 +283,8 @@ customers/form.blade.php
 @csrf
 
 
+
+
 customers/edit.blade.php
 @extends('layouts.app')
 
@@ -303,6 +308,8 @@ customers/edit.blade.php
         </div>
     </div>
 @endsection
+
+
 
 
 
