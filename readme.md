@@ -1,11 +1,12 @@
 <p align="center">Image upload or resizing </p>
 
-## [Intervention Image with Laravel](http://image.intervention.io/getting_started/installation).
+# [Intervention Image with Laravel](http://image.intervention.io/getting_started/installation).
 
-# Installation
+### Installation
 $ php composer.phar require intervention/image
 
-# Usage
+### Usage
+```sh
 // create instance
 $img = Image::make('public/foo.jpg');
 
@@ -40,3 +41,4 @@ $img->resize(400, 400, function ($constraint) {
     $constraint->aspectRatio();
     $constraint->upsize();
 });
+```
