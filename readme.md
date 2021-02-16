@@ -3,7 +3,7 @@
 # [Intervention Image with Laravel](http://image.intervention.io/getting_started/installation).
 
 ### Installation
-$ php composer.phar require intervention/image
+$ composer require intervention/image
 
 ### Usage
 ```sh
