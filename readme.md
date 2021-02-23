@@ -7,6 +7,38 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
 </p>
 
-## Install Laravel ide helper
+### Create laravel project
+```sh
+    - laravel new admin
+```
 
-- composer require --dev barryvdh/laravel-ide-helper
+### [Install Laravel IDE Helper](https://github.com/barryvdh/laravel-ide-helper).
+
+```sh
+    - composer require --dev barryvdh/laravel-ide-helper
+    - php artisan ide:generate
+```
+
+### Create Dockerfile in root
+```sh
+    FROM php:7.4-fpm-alpine
+
+    RUN docker-php-ext-install pdo pdo_mysql sockets
+    RUN curl -sS https://getcomposer.org/installer​ | php -- \
+         --install-dir=/usr/local/bin --filename=composer
+
+    WORKDIR /app
+    COPY . .
+    RUN composer install
+
+    CMD php artisan serve --host=0.0.0.0
+    EXPOSE 8000
+
+```
+
+### Create docker-compose.yml in root
+```sh
+    
+
+```
+
