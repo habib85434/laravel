@@ -72,7 +72,7 @@
     - Password : root
 ```
 
-### Ssh of Docker Container
+### SSH of Docker Container
 ```sh
     - docker-compose exec container_name sh
 ```
@@ -80,5 +80,22 @@
 ```sh
     - docker-compose exec admin sh
 ```
+
+### Configure DB Connection in .env 
+```sh
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=33063
+    DB_DATABASE=admin
+    DB_USERNAME=root
+    DB_PASSWORD=root
+```
+
+### Migration
+```sh
+    - php artisan config:cache
+    - php artisan migrate
+```
+
 
 
