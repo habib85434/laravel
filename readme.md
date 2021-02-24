@@ -58,6 +58,7 @@
 
 ### Building Docker file
 <p>Note : Make sure that your docker is in Linux container </p>
+
 ```sh
     - docker-compose up
 ```
@@ -70,4 +71,14 @@
     - Port : 33063
     - Password : root
 ```
+
+### Ssh of Docker Container
+```sh
+    - docker-compose exect container_name sh
+```
+##### Example for our case:
+```sh
+    - docker-compose exect admin sh
+```
+
 
