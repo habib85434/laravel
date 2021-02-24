@@ -74,11 +74,11 @@
 
 ### Ssh of Docker Container
 ```sh
-    - docker-compose exect container_name sh
+    - docker-compose exec container_name sh
 ```
 ##### Example for our case:
 ```sh
-    - docker-compose exect admin sh
+    - docker-compose exec admin sh
 ```
 
 
