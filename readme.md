@@ -1,11 +1,3 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
-
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
 
 ### Create laravel project
 ```sh
@@ -38,7 +30,44 @@
 
 ### Create docker-compose.yml in root
 ```sh
-    
+    version: "3.9"
+    services:
+      admin:
+        build:
+          context: ./
+          dockerfile: Dockerfile
+        ports:
+          - "8000:8000"
+        depends_on:
+          - admin_bd
 
+
+      admin_bd:
+        image: "mysql:5.7.22"
+        volumes:
+          - ./storage/bddata:/var/lib/mysql
+        ports:
+          - "33063:3306"
+        environment:
+          MYSQL_DATABASE: admin
+          MYSQL_USER: root
+          MYSQL_PASSWORD: root
+          MYSQL_ROOT_PASSWORD: root
+
+```
+
+### Building Docker file
+<p>Note : Make sure that your docker is in Linux container </p>
+```sh
+    - docker-compose up
+```
+
+### Connect Database with Mysql Workbench 
+```sh
+    - Connection Name : Docker Laravel
+    - Host Name : 127.0.0.1
+    - Username : root
+    - Port : 33063
+    - Password : root
 ```
 
