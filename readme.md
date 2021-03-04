@@ -36,16 +36,18 @@
         build:
           context: ./
           dockerfile: Dockerfile
+        volumes:
+        - .:/app
         ports:
           - "8000:8000"
         depends_on:
-          - admin_bd
-
-
-      admin_bd:
+          - admin_db
+    
+    
+      admin_db:
         image: "mysql:5.7.22"
         volumes:
-          - ./storage/bddata:/var/lib/mysql
+          - ./storage/dbdata:/var/lib/mysql
         ports:
           - "33063:3306"
         environment:
@@ -84,18 +86,15 @@
 ### Configure DB Connection in .env 
 ```sh
     DB_CONNECTION=mysql
-    DB_HOST=127.0.0.1
-    DB_PORT=33063
+    DB_HOST=admin_db
+    DB_PORT=3306
     DB_DATABASE=admin
     DB_USERNAME=root
     DB_PASSWORD=root
 ```
 
-### Migration
+### DB Migration
 ```sh
     - php artisan config:cache
     - php artisan migrate
 ```
-
-
-
