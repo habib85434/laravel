@@ -99,7 +99,7 @@
     - php artisan migrate
 ```
 
-# Create vue app using Vue CLI 
+# [Create vue app using Vue CLI](https://cli.vuejs.org/).
 ```sh
     npm install -g @vue/cli
     vue create my-project
