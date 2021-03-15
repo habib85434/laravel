@@ -163,4 +163,80 @@ public function allPets (int $record)
             throw new \Exception($throwable->getMessage());
         }
     }
+
+public function searchPets(array $data, int $record)
+    {
+        try {
+            $this->paginationNumber = $record;
+            $sPets = $this->model->query();
+
+            $sPets->with([
+                'petType',
+                'category',
+                'parents'=> function ( $p ) {
+                    $p->with('category');
+                },
+                'gallery',
+                'breeder',
+                'reviews'=> function($q)
+                {
+                    $q->where('display_status', '=', 'ACTIVE');
+                    $q->with(['replies' => function($rr)
+                    {
+                        $rr->where('display_status', '=', 'ACTIVE');
+                    }]);
+                },
+            ])
+                ->where('status','!=', 'DELETE')
+                ->orderBy('created_at', 'desc');
+            
+            if (! empty($data)) {
+                $filter = $data;
+                $startDate = null;
+                $endDate = null;
+                $prefecture = null;
+
+                foreach ( $data as $key => $row ) {
+                    if ( $row[0] == 'start_date') {
+                        $startDate = $row[2];
+                        unset($filter[$key]);
+                    }
+                    if ( $row[0] == 'end_date') {
+                        $endDate = $row[2];
+                        unset($filter[$key]);
+                    }
+                    if ( $row[0] == 'prefecture_id') {
+                        $prefecture = $row[2];
+                        unset($filter[$key]);
+                    }
+                }
+            }
+            
+            if (!empty($prefecture)) {
+                $sPets->whereHas('breeder',function (Builder $query) use (&$prefecture) {
+                    if ( ! empty($prefecture) ) {
+                        $query->where('prefecture_id', '=',$prefecture);
+                    }
+                });
+            }
+            
+            if (! empty($filter)) {
+                $sPets->where($filter);
+            }
+            
+            if (! empty($startDate)) {
+                $sPets->whereDate('created_at','>=', date(ApplogCode::DATE_FORMATE, strtotime($startDate)));
+            }
+            
+            if (! empty($endDate)) {
+                $sPets->whereDate('created_at','<=', date(ApplogCode::DATE_FORMATE, strtotime($endDate)));
+            }
+
+            $record == 0 ? $sPets->get() : $sPets->paginate($this->paginationNumber);
+            
+            return $sPets;
+        } catch ( \Throwable $throwable ) {
+            throw new \Exception($throwable->getMessage());
+        }
+    }
 ```
