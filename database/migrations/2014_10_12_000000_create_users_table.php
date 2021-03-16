@@ -21,7 +21,8 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->foreignId('current_team_id')->nullable();
-            $table->text('profile_photo_path')->nullable();
+            $table->enum('user_type', ['ADMIN', 'USER']);
+            $table->boolean('active')->default(0);
             $table->timestamps();
         });
     }

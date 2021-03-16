@@ -19,7 +19,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             AccessTokenSeeder::class,
             ApiKeySeeder::class,
-            AppKeySeeder::class
+            AppKeySeeder::class,
+            ProductSeeder::class,
         ]);
     }
 }
