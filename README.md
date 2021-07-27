@@ -1,6 +1,11 @@
 # Laravel Unit Testing
 
 ```sh
-  touch testing.sqlite
+  touch database/database.sqlite
 ```
 In ```.env``` make ```APP_DEBUG=false```
+
+### Create unit test
+```
+    - php artisan make:test UserTest --unit
+```
