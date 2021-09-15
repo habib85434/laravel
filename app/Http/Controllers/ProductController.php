@@ -2,11 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use App\Product_model;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
+    protected $user;
+
+    public function __construct()
+    {
+        $this->user = JWTAuth::parseToken()->authenticate();
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,8 +25,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product_model::all();
-        return view('products.index', compact('products'));
+        return $this->user
+            ->products()
+            ->get();
     }
 
     /**
@@ -25,75 +37,130 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('products.create');
+        //
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name'=>'required',
-            'detail'=>'required'
+        //Validate data
+        $data = $request->only('name', 'sku', 'price', 'quantity');
+        $validator = Validator::make($data, [
+            'name' => 'required|string',
+            'sku' => 'required',
+            'price' => 'required',
+            'quantity' => 'required'
         ]);
-        Product_model::create($request->all());
-        return redirect()->route('products.index')->with('success','Product Created successfully');
+
+        //Send failed response if request is not valid
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->messages()], 200);
+        }
+
+        //Request is valid, create new product
+        $product = $this->user->products()->create([
+            'name' => $request->name,
+            'sku' => $request->sku,
+            'price' => $request->price,
+            'quantity' => $request->quantity
+        ]);
+
+        //Product created, return success response
+        return response()->json([
+            'success' => true,
+            'message' => 'Product created successfully',
+            'data' => $product
+        ], Response::HTTP_OK);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param \App\Models\Product $product
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $product=Product_model::findOrFail($id);
-        return view('products.show',compact('product'));
+        $product = $this->user->products()->find($id);
+
+        if (!$product) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sorry, product not found.'
+            ], 400);
+        }
+
+        return $product;
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param \App\Models\Product $product
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Product $product)
     {
-        $product=Product_model::findOrFail($id);
-        return view('products.edit',compact('product'));
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Product $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Product $product)
     {
-        $request->validate([
-            'name'=>'required',
-            'detail'=>'required'
+        //Validate data
+        $data = $request->only('name', 'sku', 'price', 'quantity');
+        $validator = Validator::make($data, [
+            'name' => 'required|string',
+            'sku' => 'required',
+            'price' => 'required',
+            'quantity' => 'required'
         ]);
-        Product_model::findOrFail($id)->update($request->all());
-        return redirect()->route('products.index')->with('success','Product updated successfully');
+
+        //Send failed response if request is not valid
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->messages()], 200);
+        }
+
+        //Request is valid, update product
+        $product = $product->update([
+            'name' => $request->name,
+            'sku' => $request->sku,
+            'price' => $request->price,
+            'quantity' => $request->quantity
+        ]);
+
+        //Product updated, return success response
+        return response()->json([
+            'success' => true,
+            'message' => 'Product updated successfully',
+            'data' => $product
+        ], Response::HTTP_OK);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param \App\Models\Product $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Product $product)
     {
-        Product_model::findOrFail($id)->delete();
-        return redirect()->route('products.index')->with('success','Product deleted successfully');
+        $product->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Product deleted successfully'
+        ], Response::HTTP_OK);
     }
 }
